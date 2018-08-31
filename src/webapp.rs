@@ -7,6 +7,10 @@ pub struct AppState {
     pub deck: Arc<RwLock<Option<Deck>>>,
 }
 
+pub fn new_deck() -> Arc<RwLock<Option<Deck>>> {
+    Arc::new(RwLock::new(None)).clone()
+}
+
 pub fn app(initial_state: AppState) -> App<AppState> {
     App::with_state(initial_state) // <- create app with state
         // enable logger

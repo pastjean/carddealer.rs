@@ -5,20 +5,18 @@ extern crate serde_json;
 extern crate serde_derive;
 
 use actix_web::server;
-use std::sync::{Arc, RwLock};
 
 pub mod deck;
 pub mod webapp;
 
-use deck::Deck;
-use webapp::{app, AppState};
+use webapp::{app, AppState, new_deck};
 
 fn main() {
-    let deck: Arc<RwLock<Option<Deck>>> = Arc::new(RwLock::new(None)).clone();
+    let deck_state = new_deck();
 
     let sys = actix::System::new("cards-dealer");
 
-    server::new(move || app(AppState { deck: deck.clone() }))
+    server::new(move || app(AppState { deck: deck_state.clone() }))
         .bind("127.0.0.1:8080")
         .unwrap()
         .start();
