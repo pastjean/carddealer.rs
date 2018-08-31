@@ -4,20 +4,7 @@ use self::rand::{thread_rng, Rng};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum CardFace {
-  TWO,
-  THREE,
-  FOUR,
-  FIVE,
-  SIX,
-  SEVEN,
-  EIGHT,
-  NINE,
-  TEN,
-  JACK,
-  QUEEN,
-  KING,
-  ACE,
-  JOKER
+  TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE, JOKER
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -55,24 +42,28 @@ pub const CARDS: [Card;54] = [
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Deck {
-    cards: Vec<Card>
+    cards: Vec<Card>,
 }
 
 impl Deck {
     pub fn new() -> Self {
-        Deck{ cards: CARDS.to_vec() }
+        Deck {
+            cards: CARDS.to_vec(),
+        }
     }
 
     pub fn shuffle(&mut self) {
         let mut rng = thread_rng();
 
-        let mut cards_sorter: Vec<_> = self.cards.iter()
-            .map(|c| (rng.gen::<u32>(),c.clone()))
+        let mut cards_sorter: Vec<_> = self
+            .cards
+            .iter()
+            .map(|c| (rng.gen::<u32>(), c.clone()))
             .collect();
 
-        cards_sorter.sort_by_key(|&(c,_)| c);
+        cards_sorter.sort_by_key(|&(c, _)| c);
 
-        self.cards = cards_sorter.iter().map(|&(_,v)| v).collect();
+        self.cards = cards_sorter.iter().map(|&(_, v)| v).collect();
     }
 
     pub fn deal_one_card(&mut self) -> Option<Card> {
