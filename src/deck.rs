@@ -9,10 +9,7 @@ pub enum CardFace {
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum CardSuite {
-    SPADES,
-    CLUB,
-    HEARTH,
-    DIAMOND
+    SPADES, CLUB, HEARTH, DIAMOND
 }
 
 pub type Card = (CardFace, Option<CardSuite>);
