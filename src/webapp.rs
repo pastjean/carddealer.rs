@@ -1,15 +1,12 @@
-use actix_web::{HttpResponse, web};
 use actix_web::http::StatusCode;
+use actix_web::{web, HttpResponse};
 
-use std::sync::{RwLock};
 use crate::deck::{Card, Deck};
+use std::sync::RwLock;
 
+#[derive(Default)]
 pub struct AppState {
     deck: RwLock<Option<Deck>>,
-}
-
-pub fn initial_state() -> AppState {
-    AppState { deck: RwLock::new(None) }
 }
 
 #[derive(Serialize)]
@@ -34,8 +31,13 @@ struct DeckResponse {
 
 impl From<Deck> for DeckResponse {
     fn from(d: Deck) -> Self {
-        DeckResponse { 
-            cards: d.cards.clone().iter().map(|&f| CardResponse::from(f)).collect()
+        DeckResponse {
+            cards: d
+                .cards
+                .clone()
+                .iter()
+                .map(|&f| CardResponse::from(f))
+                .collect(),
         }
     }
 }
@@ -46,7 +48,7 @@ pub async fn create_deck(data: web::Data<AppState>) -> HttpResponse {
     match *deck {
         Some(_) => HttpResponse::build(StatusCode::BAD_REQUEST).body("Deck already exists"),
         None => {
-            let new_deck  = Deck::new();
+            let new_deck = Deck::new();
             *deck = Some(new_deck.clone());
             HttpResponse::Ok().json(DeckResponse::from(new_deck))
         }
@@ -60,7 +62,7 @@ pub async fn shuffle_deck(data: web::Data<AppState>) -> HttpResponse {
         Some(ref mut deck) => {
             deck.shuffle();
             HttpResponse::Ok().json(DeckResponse::from(deck.clone()))
-        },
+        }
         None => HttpResponse::build(StatusCode::BAD_REQUEST).body("Create your deck first"),
     }
 }
