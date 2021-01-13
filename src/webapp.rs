@@ -48,7 +48,7 @@ pub async fn create_deck(data: web::Data<AppState>) -> HttpResponse {
     match *deck {
         Some(_) => HttpResponse::build(StatusCode::BAD_REQUEST).body("Deck already exists"),
         None => {
-            let new_deck = Deck::new();
+            let new_deck = Deck::default();
             *deck = Some(new_deck.clone());
             HttpResponse::Ok().json(DeckResponse::from(new_deck))
         }

@@ -2,7 +2,7 @@ extern crate rand;
 
 use self::rand::{thread_rng, Rng};
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug)]
 pub enum CardFace {
     TWO,
     THREE,
@@ -20,7 +20,7 @@ pub enum CardFace {
     JOKER,
 }
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug)]
 pub enum CardSuite {
     SPADES,
     CLUB,
@@ -90,18 +90,20 @@ pub const CARDS: [Card; 54] = [
     (ACE, Some(DIAMOND)),
 ];
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug)]
 pub struct Deck {
     pub cards: Vec<Card>,
 }
 
-impl Deck {
-    pub fn new() -> Self {
+impl Default for Deck {
+    fn default() -> Self {
         Deck {
             cards: CARDS.to_vec(),
         }
     }
+}
 
+impl Deck {
     pub fn shuffle(&mut self) {
         let mut rng = thread_rng();
 
