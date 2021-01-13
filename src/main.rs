@@ -1,27 +1,27 @@
-extern crate actix;
-extern crate actix_web;
-extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
 
-use actix_web::server;
+use actix_web::{web, App, HttpServer};
+use crate::webapp::{initial_state};
 
-pub mod deck;
-pub mod webapp;
+mod deck;
+mod webapp;
 
-use webapp::{app, AppState, new_deck};
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    let state = web::Data::new(initial_state());
 
-fn main() {
-    let deck_state = new_deck();
+    let app = HttpServer::new(move || {
+        App::new()
+        .app_data(state.clone())
+        .route("/deck/", web::post().to(webapp::create_deck))
+        .route("/deck/shuffle", web::post().to(webapp::shuffle_deck))
+        .route("/deck/card", web::get().to(webapp::deal_card_from_deck))
+    })
+    .bind("0.0.0.0:8080")?
+    .run();
 
-    let sys = actix::System::new("cards-dealer");
+    println!("Running on http://localhost:8080");
 
-    server::new(move || app(AppState { deck: deck_state.clone() }))
-        .bind("127.0.0.1:8080")
-        .unwrap()
-        .start();
-
-    println!("Started http server: 127.0.0.1:8080");
-
-    sys.run();
+    app.await
 }

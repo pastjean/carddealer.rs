@@ -39,7 +39,7 @@ pub const CARDS: [Card;54] = [
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Deck {
-    cards: Vec<Card>,
+    pub cards: Vec<Card>,
 }
 
 impl Deck {
