@@ -1,6 +1,3 @@
-#[macro_use]
-extern crate serde_derive;
-
 use actix_web::{web, App, HttpServer};
 
 mod deck;
